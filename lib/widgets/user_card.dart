@@ -22,7 +22,9 @@ class UserCard extends StatelessWidget {
           children: [
             CircleAvatar(
               radius: 28,
-              backgroundImage: user.fullAvatarUrl != null ? NetworkImage(user.fullAvatarUrl!) : null,
+              backgroundImage: user.fullAvatarUrl != null
+                  ? NetworkImage(user.fullAvatarUrl!)
+                  : null,
               child: user.fullAvatarUrl == null ? const Icon(Icons.person) : null,
             ),
             const SizedBox(width: 12),
@@ -32,7 +34,8 @@ class UserCard extends StatelessWidget {
                 children: [
                   Text(user.name, style: const TextStyle(fontWeight: FontWeight.bold)),
                   const SizedBox(height: 4),
-                  Text('${user.ratingCount} puan · ${user.favoriteCount} favori', style: const TextStyle(fontSize: 12, color: Colors.grey)),
+                  Text('${user.ratingCount} puan · ${user.favoriteCount} favori',
+                      style: const TextStyle(fontSize: 12, color: Colors.grey)),
                 ],
               ),
             ),
@@ -41,4 +44,4 @@ class UserCard extends StatelessWidget {
       ),
     );
   }
-} 
+}

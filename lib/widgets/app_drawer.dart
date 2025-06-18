@@ -28,8 +28,14 @@ class AppDrawer extends StatelessWidget {
         children: [
           if (auth.isAuthenticated)
             UserAccountsDrawerHeader(
-              currentAccountPicture: const CircleAvatar(
-                child: Icon(Icons.person),
+              currentAccountPicture: CircleAvatar(
+                backgroundColor: Colors.white,
+                backgroundImage: auth.currentUser?.fullAvatarUrl != null
+                    ? NetworkImage(auth.currentUser!.fullAvatarUrl!) as ImageProvider
+                    : null,
+                child: auth.currentUser?.fullAvatarUrl == null
+                    ? const Icon(Icons.person, color: Colors.black)
+                    : null,
               ),
               accountName: Text(auth.currentUser?.name ?? 'Kullanıcı'),
               accountEmail: Text(auth.currentUser?.email ?? ''),

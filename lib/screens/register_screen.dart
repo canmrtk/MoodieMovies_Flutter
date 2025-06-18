@@ -123,7 +123,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(AppConstants.primaryGreen),
-                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  foregroundColor: Colors.white,
+                  minimumSize: const Size.fromHeight(50),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16)),
                 ),
@@ -139,7 +140,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     : () => Navigator.pushReplacementNamed(context, '/login'),
                 style: OutlinedButton.styleFrom(
                   side: const BorderSide(color: Colors.white54),
-                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  minimumSize: const Size.fromHeight(48),
                   foregroundColor: Colors.white,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16)),
@@ -163,27 +164,29 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(AppConstants.backgroundColor),
-      body: LayoutBuilder(
-        builder: (context, constraints) {
-          final isWide = constraints.maxWidth >= 800;
-          if (isWide) {
-            return Row(
-              children: [
-                Expanded(child: _buildLeft(isWide: true)),
-                Expanded(child: _buildRight(context)),
-              ],
-            );
-          } else {
-            return SingleChildScrollView(
-              child: Column(
+      body: SafeArea(
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final isWide = constraints.maxWidth >= 800;
+            if (isWide) {
+              return Row(
                 children: [
-                  _buildLeft(isWide: false),
-                  _buildRight(context),
+                  Expanded(child: _buildLeft(isWide: true)),
+                  Expanded(child: _buildRight(context)),
                 ],
-              ),
-            );
-          }
-        },
+              );
+            } else {
+              return SingleChildScrollView(
+                child: Column(
+                  children: [
+                    _buildLeft(isWide: false),
+                    _buildRight(context),
+                  ],
+                ),
+              );
+            }
+          },
+        ),
       ),
     );
   }

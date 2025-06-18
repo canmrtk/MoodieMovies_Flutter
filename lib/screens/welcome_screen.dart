@@ -75,7 +75,8 @@ class WelcomeScreen extends StatelessWidget {
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(AppConstants.primaryGreen),
-                  padding: const EdgeInsets.symmetric(vertical: 18),
+                  foregroundColor: Colors.white,
+                  minimumSize: const Size.fromHeight(50),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16)),
                 ),
@@ -98,7 +99,7 @@ class WelcomeScreen extends StatelessWidget {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.white,
                   foregroundColor: Colors.black,
-                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  minimumSize: const Size.fromHeight(48),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16)),
                 ),
@@ -122,7 +123,7 @@ class WelcomeScreen extends StatelessWidget {
                 },
                 style: OutlinedButton.styleFrom(
                   side: const BorderSide(color: Colors.white54),
-                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  minimumSize: const Size.fromHeight(48),
                   foregroundColor: Colors.white,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16)),
@@ -146,27 +147,29 @@ class WelcomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(AppConstants.backgroundColor),
-      body: LayoutBuilder(
-        builder: (context, constraints) {
-          final isWide = constraints.maxWidth >= 800;
-          if (isWide) {
-            return Row(
-              children: [
-                Expanded(child: _buildLeftSection(context, isWide: true)),
-                Expanded(child: _buildRightSection(context)),
-              ],
-            );
-          } else {
-            return SingleChildScrollView(
-              child: Column(
+      body: SafeArea(
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final isWide = constraints.maxWidth >= 800;
+            if (isWide) {
+              return Row(
                 children: [
-                  _buildLeftSection(context, isWide: false),
-                  _buildRightSection(context),
+                  Expanded(child: _buildLeftSection(context, isWide: true)),
+                  Expanded(child: _buildRightSection(context)),
                 ],
-              ),
-            );
-          }
-        },
+              );
+            } else {
+              return SingleChildScrollView(
+                child: Column(
+                  children: [
+                    _buildLeftSection(context, isWide: false),
+                    _buildRightSection(context),
+                  ],
+                ),
+              );
+            }
+          },
+        ),
       ),
     );
   }

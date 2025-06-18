@@ -39,8 +39,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 padding: const EdgeInsets.symmetric(horizontal: 48.0),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(12),
-                  child: Image.network(
-                    'https://www.hollywoodreporter.com/wp-content/uploads/2014/11/godfather_cat.jpg',
+                  child: Image.asset(
+                    'assets/godfather.jpg',
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -61,6 +61,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(AppConstants.primaryGreen),
+                  foregroundColor: Colors.white,
                   padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                 ),

@@ -1,4 +1,6 @@
 import '../constants/constants.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 
 class Film {
   final String id;
@@ -28,7 +30,17 @@ class Film {
   // Tam URL döndüren yardımcı getter
   String? get fullPosterUrl {
     if (posterUrl == null || posterUrl!.isEmpty) return null;
-    if (posterUrl!.startsWith('http')) return posterUrl;
+    if (posterUrl!.startsWith('http')) {
+      if (kDebugMode && defaultTargetPlatform == TargetPlatform.android) {
+        try {
+          final uri = Uri.parse(posterUrl!);
+          if (uri.host == 'localhost' || uri.host == '127.0.0.1' || uri.host.startsWith('192.168.')) {
+            return uri.replace(host: '10.0.2.2').toString();
+          }
+        } catch (_) {}
+      }
+      return posterUrl;
+    }
     return '${AppConstants.baseUrl}$posterUrl';
   }
 } 

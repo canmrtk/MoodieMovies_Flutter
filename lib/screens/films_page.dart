@@ -132,10 +132,19 @@ class _FilmsPageState extends State<FilmsPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-              TextButton(onPressed: viewAllRoute!=null ? () => Navigator.pushNamed(context, viewAllRoute) : null, child: const Text('Tümünü Gör')),
+              Expanded(
+                child: Text(
+                  title,
+                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              TextButton(
+                style: TextButton.styleFrom(padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 0)),
+                onPressed: viewAllRoute != null ? () => Navigator.pushNamed(context, viewAllRoute) : null,
+                child: const Text('Tümünü Gör'),
+              ),
             ],
           ),
           const SizedBox(height: 12),

@@ -42,18 +42,18 @@ class _RecommendationsPageState extends State<RecommendationsPage> {
             itemCount: prov.visible.length,
             itemBuilder: (context, index) {
               final film = prov.visible[index];
-              return Stack(
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  FilmCard(film: film),
-                  Positioned(
-                    bottom: 8,
-                    left: 8,
-                    right: 8,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(minimumSize: Size.zero, padding: const EdgeInsets.symmetric(vertical: 4)),
-                      onPressed: () => prov.markWatched(film.id),
-                      child: const Text('İzledim'),
+                  Expanded(child: FilmCard(film: film)),
+                  const SizedBox(height: 6),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      minimumSize: const Size.fromHeight(36),
+                      backgroundColor: Colors.green,
                     ),
+                    onPressed: () => prov.markWatched(film.id),
+                    child: const Text('İzledim'),
                   ),
                 ],
               );

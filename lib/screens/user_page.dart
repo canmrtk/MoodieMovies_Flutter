@@ -72,18 +72,22 @@ class _UserPageState extends State<UserPage> {
                               child: _user!.fullAvatarUrl == null ? const Icon(Icons.person, size: 40) : null,
                             ),
                             const SizedBox(width: 16),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(_user!.name, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
-                                Text(_user!.email, style: const TextStyle(color: Colors.grey)),
-                                const SizedBox(height: 8),
-                                Row(children: [
-                                  _statChip('${_user!.favoriteCount}', 'Favori'),
-                                  _statChip('${_user!.listCount}', 'Liste'),
-                                  _statChip('${_user!.ratingCount}', 'Puan'),
-                                ]),
-                              ],
+                             Expanded( // Taşmaları engellemek için
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(_user!.name, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+                                  const SizedBox(height: 8),
+                                  SingleChildScrollView(
+                                    scrollDirection: Axis.horizontal,
+                                    child: Row(children: [
+                                      _statChip('${_user!.favoriteCount}', 'Favori'),
+                                      _statChip('${_user!.listCount}', 'Liste'),
+                                      _statChip('${_user!.ratingCount}', 'Puan'),
+                                    ]),
+                                  ),
+                                ],
+                              ),
                             ),
                           ],
                         ),
@@ -110,7 +114,7 @@ class _UserPageState extends State<UserPage> {
       width: double.infinity,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: const Color(AppConstants.cardGrey),
+        color: const Color(0xFF2D3237),
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -122,8 +126,7 @@ class _UserPageState extends State<UserPage> {
   }
 
   Widget _buildFavoritesGrid() {
-    if (_loading) return const AppLoader();
-    if (_favorites.isEmpty) return const Text('Favori bulunamadı');
+    if (_favorites.isEmpty) return const Center(child: Text('Favori bulunamadı'));
     return GridView.builder(
       itemCount: _favorites.length,
       shrinkWrap: true,
@@ -135,14 +138,14 @@ class _UserPageState extends State<UserPage> {
   }
 
   Widget _buildListsColumn() {
-    if (_lists.isEmpty) return const Text('Liste bulunamadı');
+    if (_lists.isEmpty) return const Center(child: Text('Liste bulunamadı'));
     return Column(
       children: _lists.map((l) => Padding(padding: const EdgeInsets.only(bottom: 12), child: ListCard(list: l))).toList(),
     );
   }
 
   Widget _buildRatingsColumn() {
-    if (_ratings.isEmpty) return const Text('Puanlama bulunamadı');
+    if (_ratings.isEmpty) return const Center(child: Text('Puanlama bulunamadı'));
     return Column(
       children: _ratings.map((r) => _RatedFilmItem(rated: r)).toList(),
     );
@@ -151,13 +154,13 @@ class _UserPageState extends State<UserPage> {
 
 class _RatedFilm {
   final Film film;
-  final double rating;
+  final int rating;
   final DateTime? ratedAt;
   _RatedFilm({required this.film, required this.rating, this.ratedAt});
   factory _RatedFilm.fromJson(Map<String, dynamic> json) => _RatedFilm(
       film: Film.fromJson(json['film'] ?? {}),
-      rating: (json['rating'] ?? 0).toDouble(),
-      ratedAt: json['ratedAt'] != null ? DateTime.tryParse(json['ratedAt']) : null);
+      rating: (json['userRating'] ?? 0).toInt(),
+      ratedAt: json['ratedDate'] != null ? DateTime.tryParse(json['ratedDate']) : null);
 }
 
 class _RatedFilmItem extends StatelessWidget {
@@ -169,17 +172,20 @@ class _RatedFilmItem extends StatelessWidget {
         ? '${rated.ratedAt!.day}/${rated.ratedAt!.month}/${rated.ratedAt!.year}'
         : '—';
     return Card(
-      color: const Color(AppConstants.cardGrey),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      color: Colors.grey[850],
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       margin: const EdgeInsets.symmetric(vertical: 6),
       child: ListTile(
-        leading: rated.film.fullPosterUrl != null
-            ? Image.network(rated.film.fullPosterUrl!, width: 40, fit: BoxFit.cover)
-            : const Icon(Icons.movie),
+        leading: ClipRRect(
+          borderRadius: BorderRadius.circular(4),
+          child: rated.film.fullPosterUrl != null
+              ? Image.network(rated.film.fullPosterUrl!, width: 40, height: 60, fit: BoxFit.cover)
+              : const Icon(Icons.movie, size: 40),
+        ),
         title: Text(rated.film.title),
-        subtitle: Text('Puan: ${rated.rating}  •  $dateStr'),
+        subtitle: Text('Puan: ${rated.rating}/10  •  $dateStr'),
         onTap: () => Navigator.pushNamed(context, '/film', arguments: {'id': rated.film.id}),
       ),
     );
   }
-} 
+}

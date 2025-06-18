@@ -88,20 +88,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     child: user.fullAvatarUrl == null ? const Icon(Icons.person, size: 40) : null,
                   ),
                   const SizedBox(width: 16),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(user.name, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
-                      Text(user.email, style: const TextStyle(color: Colors.grey)),
-                      const SizedBox(height: 8),
-                      Row(
-                        children: [
-                          _statChip('${user.favoriteCount}', 'Favori'),
-                          _statChip('${user.listCount}', 'Liste'),
-                          _statChip('${user.ratingCount}', 'Puan'),
-                        ],
-                      ),
-                    ],
+                  Expanded( // Genişlemesi için eklendi
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(user.name, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold), overflow: TextOverflow.ellipsis),
+                        Text(user.email, style: const TextStyle(color: Colors.grey)),
+                        const SizedBox(height: 8),
+                        SingleChildScrollView( // Yatayda taşmayı engelle
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            children: [
+                              _statChip('${user.favoriteCount}', 'Favori'),
+                              _statChip('${user.listCount}', 'Liste'),
+                              _statChip('${user.ratingCount}', 'Puan'),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
@@ -115,6 +120,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       children: [
                         // LEFT COLUMN
                         Expanded(
+                          flex: 2, // Sol sütuna daha fazla yer ver
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -135,6 +141,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         const SizedBox(width: 24),
                         // RIGHT COLUMN
                         Expanded(
+                          flex: 1, // Sağ sütuna daha az yer ver
                           child: _sectionCard(
                             title: 'Son Puanlamalar',
                             child: _buildRatingsColumn(),
@@ -145,7 +152,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   } else {
                     return Column(
                       children: [
-                        _sectionCard(title: 'Favori Filmler', child: _buildFavoritesGrid(isWide: false)),
+                        _sectionCard(title: 'Favori Filmler', child: _buildFavoritesGrid(isWide: false), viewAllRoute: '/favorites-all'),
                         const SizedBox(height: 24),
                         _sectionCard(title: 'Son Listelerin', child: _buildListsColumn(), viewAllRoute: '/listem'),
                         const SizedBox(height: 24),
@@ -168,6 +175,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       child: Chip(
         backgroundColor: Colors.grey[800],
         label: Text('$value $label'),
+        padding: const EdgeInsets.symmetric(horizontal: 8),
       ),
     );
   }
@@ -177,7 +185,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       width: double.infinity,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: const Color(AppConstants.cardGrey),
+        color: const Color(0xFF2D3237), // Biraz daha açık bir ton
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
@@ -187,7 +195,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-              if(viewAllRoute!=null) TextButton(onPressed: () => Navigator.pushNamed(context, viewAllRoute), child: const Text('Tümünü Gör')),
+              if(viewAllRoute != null) 
+                TextButton(
+                  onPressed: () => Navigator.pushNamed(context, viewAllRoute), 
+                  child: const Text('Tümünü Gör >'),
+                  style: TextButton.styleFrom(foregroundColor: Colors.white70)
+                ),
             ],
           ),
           const SizedBox(height: 12),
@@ -199,8 +212,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Widget _buildFavoritesGrid({required bool isWide}) {
     if (_loading) return const AppLoader();
-    if (_favorites.isEmpty) return const Text('Henüz favori film yok');
-    final crossAxisCount = isWide ? 2 : 2;
+    if (_favorites.isEmpty) return const Center(child: Text('Henüz favori film yok'));
+    final crossAxisCount = isWide ? 4 : 2; // Geniş ekranda daha fazla film göster
     return GridView.builder(
       itemCount: _favorites.length,
       shrinkWrap: true,
@@ -217,7 +230,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Widget _buildListsColumn() {
     if (_loading) return const AppLoader();
-    if (_lists.isEmpty) return const Text('Liste bulunamadı');
+    if (_lists.isEmpty) return const Center(child: Text('Liste bulunamadı'));
     return Column(
       children: _lists.map((l) => Padding(
         padding: const EdgeInsets.only(bottom: 12),
@@ -228,43 +241,27 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Widget _buildRatingsColumn() {
     if (_loading) return const AppLoader();
-    if (_ratings.isEmpty) return const Text('Puanlama bulunamadı');
+    if (_ratings.isEmpty) return const Center(child: Text('Puanlama bulunamadı'));
     return Column(
-      children: _ratings.map((r) => _RatedFilmItem(rated: r)).toList(),
-    );
-  }
-}
-
-class _SimpleListCard extends StatelessWidget {
-  final FilmListSummary list;
-  const _SimpleListCard({Key? key, required this.list}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      color: Colors.grey[900],
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      margin: const EdgeInsets.symmetric(vertical: 8),
-      child: ListTile(
-        title: Text(list.name),
-        subtitle: Text('${list.filmCount} film'),
-        onTap: () => Navigator.pushNamed(context, '/list-detail', arguments: {'id': list.id}),
-      ),
+      children: _ratings.map((r) => Padding(
+          padding: const EdgeInsets.symmetric(vertical: 4.0),
+          child: _RatedFilmItem(rated: r),
+      )).toList(),
     );
   }
 }
 
 class _RatedFilm {
   final Film film;
-  final double rating;
+  final int rating;
   final DateTime? ratedAt;
   _RatedFilm({required this.film, required this.rating, this.ratedAt});
 
   factory _RatedFilm.fromJson(Map<String, dynamic> json) {
     return _RatedFilm(
       film: Film.fromJson(json['film'] ?? {}),
-      rating: (json['rating'] ?? 0).toDouble(),
-      ratedAt: json['ratedAt'] != null ? DateTime.tryParse(json['ratedAt']) : null,
+      rating: (json['userRating'] ?? 0).toInt(), // 'rating' yerine 'userRating'
+      ratedAt: json['ratedDate'] != null ? DateTime.tryParse(json['ratedDate']) : null, // 'ratedAt' yerine 'ratedDate'
     );
   }
 }
@@ -277,17 +274,20 @@ class _RatedFilmItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final dateStr = rated.ratedAt != null ? '${rated.ratedAt!.day}/${rated.ratedAt!.month}/${rated.ratedAt!.year}' : '—';
     return Card(
-      color: Colors.grey[900],
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      margin: const EdgeInsets.symmetric(vertical: 6),
+      color: Colors.grey[850],
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      margin: EdgeInsets.zero,
       child: ListTile(
-        leading: rated.film.fullPosterUrl != null
-            ? Image.network(rated.film.fullPosterUrl!, width: 40, fit: BoxFit.cover)
-            : const Icon(Icons.movie),
-        title: Text(rated.film.title),
-        subtitle: Text('Puan: ${rated.rating}  •  $dateStr'),
+        leading: ClipRRect(
+          borderRadius: BorderRadius.circular(4),
+          child: rated.film.fullPosterUrl != null
+              ? Image.network(rated.film.fullPosterUrl!, width: 40, height: 60, fit: BoxFit.cover)
+              : const Icon(Icons.movie, size: 40),
+        ),
+        title: Text(rated.film.title, style: const TextStyle(fontWeight: FontWeight.w600)),
+        subtitle: Text('Puan: ${rated.rating}/10  •  $dateStr'),
         onTap: () => Navigator.pushNamed(context, '/film', arguments: {'id': rated.film.id}),
       ),
     );
   }
-} 
+}
