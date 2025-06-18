@@ -4,6 +4,7 @@ import '../services/api_service.dart';
 import 'package:provider/provider.dart';
 import '../providers/user_lists_provider.dart';
 import '../widgets/create_list_dialog.dart';
+import '../widgets/app_loader.dart';
 
 class FilmDetailScreen extends StatefulWidget {
   final String filmId;
@@ -39,7 +40,7 @@ class _FilmDetailScreenState extends State<FilmDetailScreen> {
     return Scaffold(
       appBar: AppBar(title: const Text('Film Detayı'), backgroundColor: const Color(0xFF1B1D23)),
       body: _loading
-          ? const Center(child: CircularProgressIndicator())
+          ? const AppLoader()
           : _error != null
               ? Center(child: Text(_error!, style: const TextStyle(color: Colors.red)))
               : SingleChildScrollView(

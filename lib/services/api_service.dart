@@ -50,9 +50,13 @@ class ApiService {
   static ApiResponse _processResponse(http.Response response) {
     dynamic data;
     try {
-      data = jsonDecode(response.body);
+      data = jsonDecode(response.body.isNotEmpty ? response.body : '{}');
     } catch (_) {
       data = response.body;
+    }
+    if (response.statusCode >= 400) {
+      final msg = (data is Map && data['message'] != null) ? data['message'] : 'İşlem başarısız';
+      throw Exception(msg);
     }
     return ApiResponse(response.statusCode, data);
   }

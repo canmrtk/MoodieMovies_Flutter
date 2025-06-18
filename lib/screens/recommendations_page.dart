@@ -4,6 +4,7 @@ import '../providers/recommendation_provider.dart';
 import '../widgets/film_card.dart';
 import '../widgets/app_navbar.dart';
 import '../widgets/app_drawer.dart';
+import '../widgets/app_loader.dart';
 
 class RecommendationsPage extends StatefulWidget {
   const RecommendationsPage({Key? key}) : super(key: key);
@@ -26,7 +27,7 @@ class _RecommendationsPageState extends State<RecommendationsPage> {
       endDrawer: const AppDrawer(),
       body: Consumer<RecommendationProvider>(
         builder: (context, prov, _) {
-          if (prov.loading) return const Center(child: CircularProgressIndicator());
+          if (prov.loading) return const AppLoader();
           if (prov.error != null) return Center(child: Text(prov.error!, style: const TextStyle(color: Colors.red)));
           if (prov.visible.isEmpty) return const Center(child: Text('Öneri bulunamadı'));
 

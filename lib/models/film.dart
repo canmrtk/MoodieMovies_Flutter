@@ -11,7 +11,15 @@ class Film {
       id: json['id'].toString(),
       title: json['title'] ?? '',
       posterUrl: json['posterUrl'] ?? json['poster_url'],
-      rating: (json['rating'] ?? json['voteAverage'] ?? json['vote_average'])?.toDouble(),
+      rating: _toDouble(json['rating'] ?? json['voteAverage'] ?? json['vote_average']),
     );
+  }
+
+  static double? _toDouble(dynamic v) {
+    if (v == null) return null;
+    if (v is double) return v;
+    if (v is int) return v.toDouble();
+    if (v is String) return double.tryParse(v);
+    return null;
   }
 } 

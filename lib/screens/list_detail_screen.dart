@@ -5,6 +5,7 @@ import '../providers/list_detail_provider.dart';
 import '../widgets/film_card.dart';
 import '../providers/user_lists_provider.dart';
 import '../widgets/edit_list_dialog.dart';
+import '../widgets/app_loader.dart';
 
 class ListDetailScreen extends StatelessWidget {
   final String listId;
@@ -75,7 +76,7 @@ class ListDetailScreen extends StatelessWidget {
         ),
         body: Consumer<ListDetailProvider>(
           builder: (context, prov, _) {
-            if (prov.loading) return const Center(child: CircularProgressIndicator());
+            if (prov.loading) return const AppLoader();
             if (prov.error != null) return Center(child: Text(prov.error!, style: const TextStyle(color: Colors.red)));
             if (prov.detail == null) return const SizedBox.shrink();
             final detail = prov.detail!;

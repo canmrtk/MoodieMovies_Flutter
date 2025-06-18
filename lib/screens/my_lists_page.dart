@@ -4,6 +4,7 @@ import '../providers/user_lists_provider.dart';
 import '../widgets/app_navbar.dart';
 import '../widgets/create_list_dialog.dart';
 import '../widgets/app_drawer.dart';
+import '../widgets/app_loader.dart';
 
 class MyListsPage extends StatefulWidget {
   const MyListsPage({Key? key}) : super(key: key);
@@ -38,7 +39,7 @@ class _MyListsPageState extends State<MyListsPage> {
       ),
       body: Consumer<UserListsProvider>(
         builder: (context, prov, _) {
-          if (prov.loading) return const Center(child: CircularProgressIndicator());
+          if (prov.loading) return const AppLoader();
           if (prov.error != null) return Center(child: Text(prov.error!, style: const TextStyle(color: Colors.red)));
           if (prov.lists.isEmpty) return const Center(child: Text('Henüz listeniz yok'));
 

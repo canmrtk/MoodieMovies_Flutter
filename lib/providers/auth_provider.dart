@@ -4,10 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../services/api_service.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import '../models/user.dart';
 
 class AuthProvider extends ChangeNotifier {
   String? _token;
+  User? _currentUser;
+
   bool get isAuthenticated => _token != null;
+  User? get currentUser => _currentUser;
 
   AuthProvider() {
     _loadToken();
@@ -18,6 +22,7 @@ class AuthProvider extends ChangeNotifier {
     _token = prefs.getString('auth_token');
     if (_token != null) {
       log('[Auth] Token loaded from storage.');
+      await _fetchCurrentUser();
     }
     notifyListeners();
   }
@@ -36,6 +41,7 @@ class AuthProvider extends ChangeNotifier {
         await prefs.setString('auth_token', token);
         _token = token;
         log('[Auth] Login successful. Token received.');
+        await _fetchCurrentUser();
         notifyListeners();
         return true;
       } else {
@@ -65,6 +71,7 @@ class AuthProvider extends ChangeNotifier {
           await prefs.setString('auth_token', token);
           _token = token;
           log('[Auth] Token received after registration.');
+          await _fetchCurrentUser();
           notifyListeners();
         }
         return true;
@@ -82,6 +89,7 @@ class AuthProvider extends ChangeNotifier {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove('auth_token');
     _token = null;
+    _currentUser = null;
     notifyListeners();
   }
 
@@ -110,6 +118,7 @@ class AuthProvider extends ChangeNotifier {
         await prefs.setString('auth_token', token);
         _token = token;
         log('[Auth] Google Sign-In successful. Token received from backend.');
+        await _fetchCurrentUser();
         notifyListeners();
         return true;
       } else {
@@ -122,4 +131,16 @@ class AuthProvider extends ChangeNotifier {
   }
 
   String? get token => _token;
+
+  Future<void> _fetchCurrentUser() async {
+    log('[Auth] Fetching current user details...');
+    final response = await ApiService.get('/users/me');
+    if (response.statusCode == 200) {
+      _currentUser = User.fromJson(response.data);
+      log('[Auth] Current user loaded: ${_currentUser!.name}');
+      notifyListeners();
+    } else {
+      log('[Auth] Failed to fetch current user. Status: ${response.statusCode}');
+    }
+  }
 } 

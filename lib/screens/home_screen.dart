@@ -5,6 +5,7 @@ import '../widgets/app_drawer.dart';
 import '../widgets/app_navbar.dart';
 import '../widgets/film_card.dart';
 import '../constants/constants.dart';
+import '../widgets/app_loader.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -79,7 +80,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     Consumer<FilmProvider>(
                       builder: (context, filmProvider, _) {
                         if (filmProvider.loading) {
-                          return const Center(child: CircularProgressIndicator());
+                          return const AppLoader();
                         }
                         if (filmProvider.error != null) {
                           return Center(child: Text(filmProvider.error!));

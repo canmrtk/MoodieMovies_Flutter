@@ -21,6 +21,13 @@ import 'screens/test_success_screen.dart';
 import 'screens/test_screen.dart';
 import 'screens/welcome_screen.dart';
 import 'screens/register_screen.dart';
+import 'screens/profile_screen.dart';
+import 'screens/forum_screen.dart';
+import 'screens/forum_detail_screen.dart';
+import 'screens/all_favorites_screen.dart';
+import 'screens/user_page.dart';
+import 'screens/all_lists_screen.dart';
+import 'screens/all_reviewers_screen.dart';
 
 void main() {
   runApp(const MoodieMoviesApp());
@@ -73,10 +80,23 @@ class MoodieMoviesApp extends StatelessWidget {
           '/test-intro': (_) => const TestIntroScreen(),
           '/test-success': (_) => const TestSuccessScreen(),
           '/recommendations': (_) => const RecommendationsPage(),
+          '/forum': (_) => const ForumScreen(),
+          '/profile': (_) => const ProfileScreen(),
           '/register': (_) => const RegisterScreen(),
+          '/favorites-all': (_) => const AllFavoritesScreen(),
+          '/lists-all': (_) => const AllListsScreen(),
+          '/reviewers-all': (_) => const AllReviewersScreen(),
           // TODO: add more routes
         },
         onGenerateRoute: (settings){
+          if(settings.name!=null && settings.name!.startsWith('/user/')){
+            final userId=settings.name!.split('/').last;
+            return MaterialPageRoute(builder: (_) => UserPage(userId: userId));
+          }
+          if(settings.name!=null && settings.name!.startsWith('/forum/detay/')){
+            final postId=settings.name!.split('/').last;
+            return MaterialPageRoute(builder: (_) => ForumDetailScreen(postId: postId));
+          }
           if(settings.name!=null && settings.name!.startsWith('/test/')){
             final pageStr=settings.name!.split('/').last;
             final page=int.tryParse(pageStr)??1;
