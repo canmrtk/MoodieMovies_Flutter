@@ -1,3 +1,5 @@
+import '../constants/constants.dart';
+
 class User {
   final String id;
   final String name;
@@ -34,5 +36,11 @@ class User {
     if (v is int) return v;
     if (v is String) return int.tryParse(v) ?? 0;
     return 0;
+  }
+
+  String? get fullAvatarUrl {
+    if (avatarImageUrl == null || avatarImageUrl!.isEmpty) return null;
+    if (avatarImageUrl!.startsWith('http')) return avatarImageUrl;
+    return '${AppConstants.baseUrl}$avatarImageUrl';
   }
 } 

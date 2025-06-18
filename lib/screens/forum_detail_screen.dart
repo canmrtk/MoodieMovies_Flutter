@@ -106,7 +106,9 @@ class _ForumDetailScreenState extends State<ForumDetailScreen> {
                             Row(
                               children: [
                                 CircleAvatar(
-                                  backgroundImage: _post!.authorAvatarUrl != null ? NetworkImage(_post!.authorAvatarUrl!) : null,
+                                  backgroundImage: _post!.authorAvatarUrl != null
+                                      ? NetworkImage(_post!.authorAvatarUrl!.startsWith('http') ? _post!.authorAvatarUrl! : '${AppConstants.baseUrl}${_post!.authorAvatarUrl!}')
+                                      : null,
                                   child: _post!.authorAvatarUrl == null ? const Icon(Icons.person) : null,
                                 ),
                                 const SizedBox(width: 8),
@@ -211,7 +213,9 @@ class _CommentTile extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           CircleAvatar(
-            backgroundImage: comment.authorAvatarUrl != null ? NetworkImage(comment.authorAvatarUrl!) : null,
+            backgroundImage: comment.authorAvatarUrl != null
+                ? NetworkImage(comment.authorAvatarUrl!.startsWith('http') ? comment.authorAvatarUrl! : '${AppConstants.baseUrl}${comment.authorAvatarUrl!}')
+                : null,
             child: comment.authorAvatarUrl == null ? const Icon(Icons.person) : null,
           ),
           const SizedBox(width: 12),

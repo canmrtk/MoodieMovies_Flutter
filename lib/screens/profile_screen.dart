@@ -84,8 +84,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 children: [
                   CircleAvatar(
                     radius: 40,
-                    backgroundImage: user.avatarImageUrl != null ? NetworkImage(user.avatarImageUrl!) : null,
-                    child: user.avatarImageUrl == null ? const Icon(Icons.person, size: 40) : null,
+                    backgroundImage: user.fullAvatarUrl != null ? NetworkImage(user.fullAvatarUrl!) : null,
+                    child: user.fullAvatarUrl == null ? const Icon(Icons.person, size: 40) : null,
                   ),
                   const SizedBox(width: 16),
                   Column(
@@ -281,8 +281,8 @@ class _RatedFilmItem extends StatelessWidget {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       margin: const EdgeInsets.symmetric(vertical: 6),
       child: ListTile(
-        leading: rated.film.posterUrl != null
-            ? Image.network(rated.film.posterUrl!, width: 40, fit: BoxFit.cover)
+        leading: rated.film.fullPosterUrl != null
+            ? Image.network(rated.film.fullPosterUrl!, width: 40, fit: BoxFit.cover)
             : const Icon(Icons.movie),
         title: Text(rated.film.title),
         subtitle: Text('Puan: ${rated.rating}  •  $dateStr'),

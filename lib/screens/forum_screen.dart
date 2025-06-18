@@ -165,7 +165,9 @@ class _ForumPostTile extends StatelessWidget {
         child: Row(
           children: [
             CircleAvatar(
-              backgroundImage: post.authorAvatarUrl != null ? NetworkImage(post.authorAvatarUrl!) : null,
+              backgroundImage: post.authorAvatarUrl != null
+                  ? NetworkImage(post.authorAvatarUrl!.startsWith('http') ? post.authorAvatarUrl! : '${AppConstants.baseUrl}${post.authorAvatarUrl!}')
+                  : null,
               child: post.authorAvatarUrl == null ? const Icon(Icons.person) : null,
             ),
             const SizedBox(width: 12),

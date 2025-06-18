@@ -50,8 +50,8 @@ class ListCard extends StatelessWidget {
               left: i * 20.0,
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(8),
-                child: posters[i].posterUrl != null
-                    ? Image.network(posters[i].posterUrl!, width: 50, height: 75, fit: BoxFit.cover)
+                child: posters[i].fullPosterUrl != null
+                    ? Image.network(posters[i].fullPosterUrl!, width: 50, height: 75, fit: BoxFit.cover)
                     : Image.asset('assets/placeholder_poster.png', width: 50, height: 75, fit: BoxFit.cover),
               ),
             ),

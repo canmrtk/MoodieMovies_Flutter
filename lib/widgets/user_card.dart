@@ -22,8 +22,8 @@ class UserCard extends StatelessWidget {
           children: [
             CircleAvatar(
               radius: 28,
-              backgroundImage: user.avatarImageUrl != null ? NetworkImage(user.avatarImageUrl!) : null,
-              child: user.avatarImageUrl == null ? const Icon(Icons.person) : null,
+              backgroundImage: user.fullAvatarUrl != null ? NetworkImage(user.fullAvatarUrl!) : null,
+              child: user.fullAvatarUrl == null ? const Icon(Icons.person) : null,
             ),
             const SizedBox(width: 12),
             Expanded(
